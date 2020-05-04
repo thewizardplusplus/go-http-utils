@@ -1,0 +1,25 @@
+required = [
+  "github.com/alecthomas/gometalinter",
+  "github.com/vektra/mockery/cmd/mockery",
+  "github.com/cweill/gotests/gotests",
+]
+
+[prune]
+  go-tests = true
+  unused-packages = true
+
+[[constraint]]
+  name = "github.com/go-log/log"
+  version = "0.2.0"
+
+[[constraint]]
+  name = "github.com/golang/gddo"
+  revision = "3c2cc9a6329d9842b3bbdaf307a8110d740cf94c"
+
+[[constraint]]
+  name = "github.com/gorilla/mux"
+  version = "1.7.4"
+
+[[constraint]]
+  name = "github.com/stretchr/testify"
+  version = "1.5.1"
