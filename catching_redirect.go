@@ -5,6 +5,10 @@ import (
 )
 
 // CatchingRedirect ...
+//
+// It's a complete analog of the http.Redirect() function with capturing
+// the last error from the Write() method of the http.ResponseWriter interface.
+//
 func CatchingRedirect(
 	writer http.ResponseWriter,
 	request *http.Request,
