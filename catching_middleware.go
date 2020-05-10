@@ -8,6 +8,11 @@ import (
 )
 
 // CatchingMiddleware ...
+//
+// It's a middleware that captures the last error from the Write() method
+// of the http.ResponseWriter interface and logs it via the provided log.Logger
+// interface.
+//
 func CatchingMiddleware(logger log.Logger) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(
