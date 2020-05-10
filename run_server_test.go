@@ -2,6 +2,7 @@ package httputils
 
 import (
 	"context"
+	stdlog "log"
 	"net/http"
 	"os"
 	"testing"
@@ -9,10 +10,27 @@ import (
 	"time"
 
 	"github.com/go-log/log"
+	"github.com/go-log/log/print"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
+
+func ExampleRunServer() {
+	server := &http.Server{Addr: ":8080"}
+	// use the standard logger for error handling
+	logger := stdlog.New(os.Stderr, "", stdlog.LstdFlags)
+	if ok := RunServer(
+		context.Background(),
+		server,
+		// wrap the standard logger via the github.com/go-log/log package
+		print.New(logger),
+		os.Interrupt,
+	); !ok {
+		// the error is already logged, so just end the program with the error status
+		os.Exit(1)
+	}
+}
 
 func TestRunServer(test *testing.T) {
 	type args struct {
