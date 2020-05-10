@@ -2,6 +2,7 @@ package httputils
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"testing"
 	"testing/iotest"
@@ -9,6 +10,24 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
+
+func ExampleCatchingResponseWriter() {
+	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+		catchingWriter := NewCatchingResponseWriter(writer)
+
+		// use the catchingWriter object as the usual http.ResponseWriter interface
+		http.Redirect(
+			catchingWriter,
+			request,
+			"http://example.com/",
+			http.StatusMovedPermanently,
+		)
+
+		if err := catchingWriter.LastError(); err != nil {
+			log.Printf("unable to write the HTTP response: %v", err)
+		}
+	})
+}
 
 func TestNewCatchingResponseWriter(test *testing.T) {
 	writer := new(MockResponseWriter)
