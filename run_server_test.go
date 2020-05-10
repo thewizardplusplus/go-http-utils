@@ -17,7 +17,8 @@ import (
 func TestRunServer(test *testing.T) {
 	type args struct {
 		shutdownCtx      context.Context
-		dependencies     RunServerDependencies
+		server           Server
+		logger           log.Logger
 		interruptSignals []os.Signal
 	}
 
@@ -31,21 +32,19 @@ func TestRunServer(test *testing.T) {
 			name: "success",
 			args: args{
 				shutdownCtx: context.Background(),
-				dependencies: RunServerDependencies{
-					Server: func() Server {
-						server := new(MockServer)
-						server.On("ListenAndServe").Return(http.ErrServerClosed)
-						server.
-							On(
-								"Shutdown",
-								mock.MatchedBy(func(context.Context) bool { return true }),
-							).
-							Return(nil)
+				server: func() Server {
+					server := new(MockServer)
+					server.On("ListenAndServe").Return(http.ErrServerClosed)
+					server.
+						On(
+							"Shutdown",
+							mock.MatchedBy(func(context.Context) bool { return true }),
+						).
+						Return(nil)
 
-						return server
-					}(),
-					Logger: new(MockLogger),
-				},
+					return server
+				}(),
+				logger:           new(MockLogger),
 				interruptSignals: []os.Signal{os.Interrupt},
 			},
 			action: func(test *testing.T) {
@@ -63,26 +62,24 @@ func TestRunServer(test *testing.T) {
 			name: "error on the ListenAndServe() call",
 			args: args{
 				shutdownCtx: context.Background(),
-				dependencies: RunServerDependencies{
-					Server: func() Server {
-						server := new(MockServer)
-						server.On("ListenAndServe").Return(iotest.ErrTimeout)
+				server: func() Server {
+					server := new(MockServer)
+					server.On("ListenAndServe").Return(iotest.ErrTimeout)
 
-						return server
-					}(),
-					Logger: func() log.Logger {
-						logger := new(MockLogger)
-						logger.
-							On(
-								"Logf",
-								mock.MatchedBy(func(string) bool { return true }),
-								iotest.ErrTimeout,
-							).
-							Return()
+					return server
+				}(),
+				logger: func() log.Logger {
+					logger := new(MockLogger)
+					logger.
+						On(
+							"Logf",
+							mock.MatchedBy(func(string) bool { return true }),
+							iotest.ErrTimeout,
+						).
+						Return()
 
-						return logger
-					}(),
-				},
+					return logger
+				}(),
 				interruptSignals: []os.Signal{os.Interrupt},
 			},
 			action: func(test *testing.T) {},
@@ -92,32 +89,30 @@ func TestRunServer(test *testing.T) {
 			name: "error on the Shutdown() call",
 			args: args{
 				shutdownCtx: context.Background(),
-				dependencies: RunServerDependencies{
-					Server: func() Server {
-						server := new(MockServer)
-						server.On("ListenAndServe").Return(http.ErrServerClosed)
-						server.
-							On(
-								"Shutdown",
-								mock.MatchedBy(func(context.Context) bool { return true }),
-							).
-							Return(iotest.ErrTimeout)
+				server: func() Server {
+					server := new(MockServer)
+					server.On("ListenAndServe").Return(http.ErrServerClosed)
+					server.
+						On(
+							"Shutdown",
+							mock.MatchedBy(func(context.Context) bool { return true }),
+						).
+						Return(iotest.ErrTimeout)
 
-						return server
-					}(),
-					Logger: func() log.Logger {
-						logger := new(MockLogger)
-						logger.
-							On(
-								"Logf",
-								mock.MatchedBy(func(string) bool { return true }),
-								iotest.ErrTimeout,
-							).
-							Return()
+					return server
+				}(),
+				logger: func() log.Logger {
+					logger := new(MockLogger)
+					logger.
+						On(
+							"Logf",
+							mock.MatchedBy(func(string) bool { return true }),
+							iotest.ErrTimeout,
+						).
+						Return()
 
-						return logger
-					}(),
-				},
+					return logger
+				}(),
 				interruptSignals: []os.Signal{os.Interrupt},
 			},
 			action: func(test *testing.T) {
@@ -137,15 +132,12 @@ func TestRunServer(test *testing.T) {
 
 			gotOk := RunServer(
 				data.args.shutdownCtx,
-				data.args.dependencies,
+				data.args.server,
+				data.args.logger,
 				data.args.interruptSignals...,
 			)
 
-			mock.AssertExpectationsForObjects(
-				test,
-				data.args.dependencies.Server,
-				data.args.dependencies.Logger,
-			)
+			mock.AssertExpectationsForObjects(test, data.args.server, data.args.logger)
 			data.wantOk(test, gotOk)
 		})
 	}

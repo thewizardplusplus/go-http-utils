@@ -18,16 +18,11 @@ type Server interface {
 	Shutdown(ctx context.Context) error
 }
 
-// RunServerDependencies ...
-type RunServerDependencies struct {
-	Server Server
-	Logger log.Logger
-}
-
 // RunServer ...
 func RunServer(
 	shutdownCtx context.Context,
-	dependencies RunServerDependencies,
+	server Server,
+	logger log.Logger,
 	interruptSignals ...os.Signal,
 ) (ok bool) {
 	var waiter sync.WaitGroup
@@ -48,16 +43,16 @@ func RunServer(
 			return
 		}
 
-		err := dependencies.Server.Shutdown(shutdownCtx)
+		err := server.Shutdown(shutdownCtx)
 		if ok = err == nil; !ok {
 			// error with closing listeners
-			dependencies.Logger.Logf("error with shutdown: %v", err)
+			logger.Logf("error with shutdown: %v", err)
 		}
 	}()
 
-	if err := dependencies.Server.ListenAndServe(); err != http.ErrServerClosed {
+	if err := server.ListenAndServe(); err != http.ErrServerClosed {
 		// error with starting or closing listeners
-		dependencies.Logger.Logf("error with listening and serving: %v", err)
+		logger.Logf("error with listening and serving: %v", err)
 		return false
 	}
 
