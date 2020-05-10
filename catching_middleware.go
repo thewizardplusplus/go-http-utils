@@ -23,7 +23,7 @@ func CatchingMiddleware(logger log.Logger) mux.MiddlewareFunc {
 			next.ServeHTTP(catchingWriter, request)
 
 			if err := catchingWriter.LastError(); err != nil {
-				logger.Logf("unable to handle the request: %v", err)
+				logger.Logf("unable to write the HTTP response: %v", err)
 			}
 		})
 	}
