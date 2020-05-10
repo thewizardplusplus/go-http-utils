@@ -44,15 +44,18 @@ func RunServer(
 		}
 
 		err := server.Shutdown(shutdownCtx)
-		if ok = err == nil; !ok {
+		if err != nil {
 			// error with closing listeners
-			logger.Logf("error with shutdown: %v", err)
+			logger.Logf("unable to shutdown the HTTP server: %v", err)
 		}
+
+		// update the result
+		ok = err == nil
 	}()
 
 	if err := server.ListenAndServe(); err != http.ErrServerClosed {
 		// error with starting or closing listeners
-		logger.Logf("error with listening and serving: %v", err)
+		logger.Logf("unable to run the HTTP server: %v", err)
 		return false
 	}
 
