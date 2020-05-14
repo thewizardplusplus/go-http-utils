@@ -7,6 +7,15 @@
 
 HTTP utility functions.
 
+## Features
+
+- wrapper for the `http.ResponseWriter` interface for catching writing errors;
+- analog of the `http.Redirect()` function with catching writing errors;
+- middlewares:
+  - middleware for catching writing errors;
+  - middleware that fallback of requests to static assets to the index.html file (useful in a SPA);
+- function to start a server with support for graceful shutdown by a signal.
+
 ## Installation
 
 Prepare the directory:
