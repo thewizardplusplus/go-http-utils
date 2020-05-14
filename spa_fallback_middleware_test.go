@@ -1,6 +1,7 @@
 package httputils
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -8,6 +9,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
+
+func ExampleSPAFallbackMiddleware() {
+	staticAssetHandler := http.FileServer(http.Dir("/var/www/example.com"))
+	staticAssetHandler = SPAFallbackMiddleware()(staticAssetHandler)
+
+	http.Handle("/", staticAssetHandler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
 
 func TestSPAFallbackMiddleware(test *testing.T) {
 	type middlewareArgs struct {
