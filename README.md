@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/thewizardplusplus/go-http-utils.svg?branch=master)](https://travis-ci.org/thewizardplusplus/go-http-utils)
 [![codecov](https://codecov.io/gh/thewizardplusplus/go-http-utils/branch/master/graph/badge.svg)](https://codecov.io/gh/thewizardplusplus/go-http-utils)
 
-HTTP utility functions.
+The library that provides HTTP utility functions.
 
 ## Features
 
