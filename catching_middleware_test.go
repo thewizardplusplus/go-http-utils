@@ -1,14 +1,37 @@
 package httputils
 
 import (
+	"fmt"
+	stdlog "log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 	"testing/iotest"
 
 	"github.com/go-log/log"
+	"github.com/go-log/log/print"
 	"github.com/stretchr/testify/mock"
 )
+
+func ExampleCatchingMiddleware() {
+	// use the standard logger for error handling
+	logger := stdlog.New(os.Stderr, "", stdlog.LstdFlags)
+	catchingMiddleware := CatchingMiddleware(
+		// wrap the standard logger via the github.com/go-log/log package
+		print.New(logger),
+	)
+
+	var handler http.Handler // nolint: staticcheck
+	handler = http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		// writing error will be handled by the catching middleware
+		fmt.Fprintln(writer, "Hello, world!") // nolint: errcheck
+	})
+	handler = catchingMiddleware(handler)
+
+	http.Handle("/", handler)
+	logger.Fatal(http.ListenAndServe(":8080", nil))
+}
 
 func TestCatchingMiddleware(test *testing.T) {
 	type args struct {
