@@ -159,6 +159,12 @@ func main() {
 }
 ```
 
+## Bibliography
+
+1. [Check Errors When Calling `http.ResponseWriter.Write()`](https://stackoverflow.com/a/43976633)
+2. [Proxying API Requests in Development](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
+3. https://golang.org/pkg/net/http/#Server.Shutdown
+
 ## License
 
 The MIT License (MIT)
