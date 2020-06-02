@@ -33,6 +33,15 @@ type ResponseWriter interface {
 	http.ResponseWriter
 }
 
+//go:generate mockery -name=File -inpkg -case=underscore -testonly
+
+// File ...
+//
+// It's used only for mock generating.
+type File interface {
+	http.File
+}
+
 //go:generate mockery -name=FileSystem -inpkg -case=underscore -testonly
 
 // FileSystem ...
