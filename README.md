@@ -127,6 +127,34 @@ func main() {
 }
 ```
 
+`httputils.StaticAssetHandler()`:
+
+```go
+package main
+
+import (
+	stdlog "log"
+	"net/http"
+	"os"
+
+	"github.com/go-log/log/print"
+	httputils "github.com/thewizardplusplus/go-http-utils"
+)
+
+func main() {
+	// use the standard logger for error handling
+	logger := stdlog.New(os.Stderr, "", stdlog.LstdFlags)
+	staticAssetHandler := httputils.StaticAssetHandler(
+		http.Dir("/var/www/example.com"),
+		// wrap the standard logger via the github.com/go-log/log package
+		print.New(logger),
+	)
+
+	http.Handle("/", staticAssetHandler)
+	stdlog.Fatal(http.ListenAndServe(":8080", nil))
+}
+```
+
 `httputils.RunServer()`:
 
 ```go
