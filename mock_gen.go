@@ -2,6 +2,7 @@ package httputils
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/go-log/log"
 )
@@ -31,6 +32,15 @@ type Handler interface {
 // It's used only for mock generating.
 type ResponseWriter interface {
 	http.ResponseWriter
+}
+
+//go:generate mockery -name=FileInfo -inpkg -case=underscore -testonly
+
+// FileInfo ...
+//
+// It's used only for mock generating.
+type FileInfo interface {
+	os.FileInfo
 }
 
 //go:generate mockery -name=File -inpkg -case=underscore -testonly
