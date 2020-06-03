@@ -7,6 +7,10 @@ import (
 )
 
 // StaticAssetHandler ...
+//
+// It's a complete analog of the http.FileServer() function with applied
+// SPAFallbackMiddleware() and CatchingMiddleware() middlewares.
+//
 func StaticAssetHandler(
 	fileSystem http.FileSystem,
 	logger log.Logger,
