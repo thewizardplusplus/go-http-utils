@@ -20,12 +20,13 @@ func TestCatchingRedirect(test *testing.T) {
 	}
 
 	for _, data := range []struct {
-		name    string
-		args    args
-		wantErr error
+		name       string
+		args       args
+		wantHeader http.Header
+		wantErr    error
 	}{
 		{
-			name: "success",
+			name: "success without the Content-Type header",
 			args: args{
 				writer: func() http.ResponseWriter {
 					body := fmt.Sprintf(
@@ -47,6 +48,36 @@ func TestCatchingRedirect(test *testing.T) {
 				),
 				url:        "http://example.com/two",
 				statusCode: http.StatusMovedPermanently,
+			},
+			wantHeader: http.Header{
+				"Content-Type": {"text/html; charset=utf-8"},
+				"Location":     {"http://example.com/two"},
+			},
+			wantErr: nil,
+		},
+		{
+			name: "success with the Content-Type header",
+			args: args{
+				writer: func() http.ResponseWriter {
+					writer := new(MockResponseWriter)
+					writer.
+						On("Header").
+						Return(http.Header{"Content-Type": {"application/octet-stream"}})
+					writer.On("WriteHeader", http.StatusMovedPermanently).Return()
+
+					return writer
+				}(),
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/one",
+					nil,
+				),
+				url:        "http://example.com/two",
+				statusCode: http.StatusMovedPermanently,
+			},
+			wantHeader: http.Header{
+				"Content-Type": {"application/octet-stream"},
+				"Location":     {"http://example.com/two"},
 			},
 			wantErr: nil,
 		},
@@ -74,6 +105,10 @@ func TestCatchingRedirect(test *testing.T) {
 				url:        "http://example.com/two",
 				statusCode: http.StatusMovedPermanently,
 			},
+			wantHeader: http.Header{
+				"Content-Type": {"text/html; charset=utf-8"},
+				"Location":     {"http://example.com/two"},
+			},
 			wantErr: iotest.ErrTimeout,
 		},
 	} {
@@ -86,6 +121,7 @@ func TestCatchingRedirect(test *testing.T) {
 			)
 
 			mock.AssertExpectationsForObjects(test, data.args.writer)
+			assert.Equal(test, data.wantHeader, data.args.writer.Header())
 			assert.Equal(test, data.wantErr, gotErr)
 		})
 	}
