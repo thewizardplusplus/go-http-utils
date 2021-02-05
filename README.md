@@ -193,8 +193,9 @@ func main() {
 ## Bibliography
 
 1. [Check Errors When Calling `http.ResponseWriter.Write()`](https://stackoverflow.com/a/43976633)
-2. [Proxying API Requests in Development](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
-3. https://golang.org/pkg/net/http/#Server.Shutdown
+2. [Mocking HTTP Requests in Golang](https://www.thegreatcodeadventure.com/mocking-http-requests-in-golang/)
+3. [Proxying API Requests in Development](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
+4. https://golang.org/pkg/net/http/#Server.Shutdown
 
 ## License
 
