@@ -10,6 +10,7 @@ The library that provides HTTP utility functions.
 ## Features
 
 - wrapper for the `http.ResponseWriter` interface for catching writing errors;
+- simplified interface of the `http.Client` structure for mocking purposes;
 - middlewares:
   - middleware for catching writing errors;
   - middleware that fallback of requests to static assets to the index.html file (useful in a SPA);
