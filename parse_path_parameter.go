@@ -10,6 +10,17 @@ import (
 )
 
 // ParsePathParameter ...
+//
+// It extracts the parameter with the specified name from the path part
+// of the request URL and then scans it into the data.
+//
+// The extracting does not actually work with the request URL directly. Instead,
+// this function relies on the use of the github.com/gorilla/mux package
+// for routing.
+//
+// The scanning works via the fmt.Sscan() function and has the corresponding
+// restrictions.
+//
 func ParsePathParameter(
 	request *http.Request,
 	name string,
