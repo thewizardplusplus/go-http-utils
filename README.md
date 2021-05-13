@@ -9,15 +9,25 @@ The library that provides HTTP utility functions.
 
 ## Features
 
-- wrapper for the `http.ResponseWriter` interface for catching writing errors;
 - simplified interface of the `http.Client` structure for mocking purposes;
+- wrapper for the `http.ResponseWriter` interface for catching writing errors;
 - middlewares:
   - middleware for catching writing errors;
   - middleware that fallback of requests to static assets to the index.html file (useful in a SPA);
-- analogs:
-  - analog of the `http.Redirect()` function with catching writing errors;
-  - analog of the `http.FileServer()` function with applied above-mentioned middlewares;
-- function to start a server with support for graceful shutdown by a signal.
+- functions:
+  - analogs:
+    - analog of the `http.Redirect()` function with catching writing errors;
+    - analog of the `http.FileServer()` function with applied above-mentioned middlewares;
+    - analog of the `http.Error()` function with the additional improvements:
+      - additional logging of the error;
+      - accepting of an error object instead of an error string;
+  - function to extract the parameter with the specified name from the path part of the request URL and then scan it into the data;
+  - JSON:
+    - function to read bytes from the reader and then unmarshal them into the data;
+    - function to marshal the data and then write it in the writer:
+      - additional setting of the corresponding content type;
+      - additional setting of the specified status code;
+  - function to start a server with support for graceful shutdown by a signal.
 
 ## Installation
 
