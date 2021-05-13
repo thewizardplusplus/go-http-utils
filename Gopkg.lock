@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:52a96df7916add5c4269808dc5a4e11a81ea4075b402aa1ca9615fa9bb425711"
+  name = "github.com/AlekSi/pointer"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "4f2b1f4deff73a28288291183baa1e9dff4a93a5"
+  version = "v1.1.0"
+
+[[projects]]
   digest = "1:9afc639ef88d907f2e87ab68cbc63117b88d0d84238fd6b08224515d00a8136a"
   name = "github.com/alecthomas/gometalinter"
   packages = ["."]
@@ -397,6 +405,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/AlekSi/pointer",
     "github.com/alecthomas/gometalinter",
     "github.com/cweill/gotests/gotests",
     "github.com/go-log/log",
