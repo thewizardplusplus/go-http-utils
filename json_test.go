@@ -2,6 +2,7 @@ package httputils
 
 import (
 	"io"
+	"net/http"
 	"testing"
 	"testing/iotest"
 
@@ -137,6 +138,33 @@ func TestReadJSON(test *testing.T) {
 
 			mock.AssertExpectationsForObjects(test, data.args.reader)
 			assert.Equal(test, data.wantData, data.args.data)
+			data.wantErr(test, gotErr)
+		})
+	}
+}
+
+func TestWriteJSON(test *testing.T) {
+	type args struct {
+		writer     http.ResponseWriter
+		statusCode int
+		data       interface{}
+	}
+
+	for _, data := range []struct {
+		name       string
+		args       args
+		wantHeader http.Header
+		wantErr    assert.ErrorAssertionFunc
+	}{
+		// TODO: Add test cases.
+	} {
+		test.Run(data.name, func(test *testing.T) {
+			gotErr := WriteJSON(data.args.writer, data.args.statusCode, data.args.data)
+
+			mock.AssertExpectationsForObjects(test, data.args.writer)
+			if data.wantHeader != nil {
+				assert.Equal(test, data.wantHeader, data.args.writer.Header())
+			}
 			data.wantErr(test, gotErr)
 		})
 	}
