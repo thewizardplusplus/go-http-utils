@@ -7,6 +7,11 @@ import (
 )
 
 // LoggingError ...
+//
+// It's a complete analog of the http.Error() function with the additional
+// logging of the error. This function also accepts an error object instead of
+// an error string.
+//
 func LoggingError(
 	logger log.Logger,
 	writer http.ResponseWriter,
