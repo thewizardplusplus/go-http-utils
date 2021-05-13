@@ -10,6 +10,16 @@ import (
 )
 
 // ReadJSON ...
+//
+// It reads bytes from the reader and then unmarshals them into the data.
+// The data should be a non-nil pointer.
+//
+// If the reader is the io.ReadCloser interface, this function
+// does not close it.
+//
+// If the data is not a non-nil pointer, this function will return an error,
+// and it will happen before the reader is read.
+//
 func ReadJSON(reader io.Reader, data interface{}) error {
 	dataReflection := reflect.ValueOf(data)
 	if dataReflection.Kind() != reflect.Ptr || dataReflection.IsNil() {
