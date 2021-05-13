@@ -1,6 +1,7 @@
 package httputils
 
 import (
+	"io"
 	"net/http"
 	"os"
 
@@ -59,4 +60,13 @@ type File interface {
 // It's used only for mock generating.
 type FileSystem interface {
 	http.FileSystem
+}
+
+//go:generate mockery --name=Reader --inpackage --case=underscore --testonly
+
+// Reader ...
+//
+// It's used only for mock generating.
+type Reader interface {
+	io.Reader
 }
