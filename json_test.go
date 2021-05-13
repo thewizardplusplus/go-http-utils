@@ -149,6 +149,10 @@ func TestWriteJSON(test *testing.T) {
 		statusCode int
 		data       interface{}
 	}
+	type testData struct {
+		FieldOne int
+		FieldTwo string
+	}
 
 	for _, data := range []struct {
 		name       string
@@ -156,7 +160,54 @@ func TestWriteJSON(test *testing.T) {
 		wantHeader http.Header
 		wantErr    assert.ErrorAssertionFunc
 	}{
-		// TODO: Add test cases.
+		{
+			name: "success",
+			args: args{
+				writer: func() http.ResponseWriter {
+					const bytes = `{"FieldOne":23,"FieldTwo":"test"}`
+
+					writer := new(MockResponseWriter)
+					writer.On("Header").Return(http.Header{})
+					writer.On("WriteHeader", http.StatusOK).Return()
+					writer.On("Write", []byte(bytes)).Return(len(bytes), nil)
+
+					return writer
+				}(),
+				statusCode: http.StatusOK,
+				data:       testData{FieldOne: 23, FieldTwo: "test"},
+			},
+			wantHeader: http.Header{"Content-Type": {"application/json"}},
+			wantErr:    assert.NoError,
+		},
+		{
+			name: "error with the marshalling",
+			args: args{
+				writer:     new(MockResponseWriter),
+				statusCode: http.StatusOK,
+				data:       func() {},
+			},
+			wantHeader: nil,
+			wantErr:    assert.Error,
+		},
+		{
+			name: "error with the writing",
+			args: args{
+				writer: func() http.ResponseWriter {
+					const bytes = `{"FieldOne":23,"FieldTwo":"test"}`
+
+					writer := new(MockResponseWriter)
+					writer.On("Header").Return(http.Header{})
+					writer.On("WriteHeader", http.StatusOK).Return()
+					writer.On("Write", []byte(bytes)).Return(0, iotest.ErrTimeout)
+
+					return writer
+				}(),
+				statusCode: http.StatusOK,
+				data:       testData{FieldOne: 23, FieldTwo: "test"},
+			},
+			wantHeader: http.Header{"Content-Type": {"application/json"}},
+			wantErr:    assert.Error,
+		},
 	} {
 		test.Run(data.name, func(test *testing.T) {
 			gotErr := WriteJSON(data.args.writer, data.args.statusCode, data.args.data)
