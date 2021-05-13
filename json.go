@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"reflect"
 
 	"github.com/pkg/errors"
@@ -33,6 +34,26 @@ func ReadJSON(reader io.Reader, data interface{}) error {
 
 	if err := json.Unmarshal(bytes, data); err != nil {
 		return errors.Wrap(err, "unable to unmarshal the data")
+	}
+
+	return nil
+}
+
+// WriteJSON ...
+func WriteJSON(
+	writer http.ResponseWriter,
+	statusCode int,
+	data interface{},
+) error {
+	bytes, err := json.Marshal(data)
+	if err != nil {
+		return errors.Wrap(err, "unable to marshal the data")
+	}
+
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(statusCode)
+	if _, err := writer.Write(bytes); err != nil {
+		return errors.Wrap(err, "unable to write the data")
 	}
 
 	return nil
