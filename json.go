@@ -40,6 +40,13 @@ func ReadJSON(reader io.Reader, data interface{}) error {
 }
 
 // WriteJSON ...
+//
+// It marshals the data and then writes it in the writer. This function
+// also sets the corresponding content type and the specified status code.
+//
+// If the data marshalling failed, neither the content type nor the status code
+// will be set.
+//
 func WriteJSON(
 	writer http.ResponseWriter,
 	statusCode int,
