@@ -7,7 +7,7 @@ import (
 	"github.com/go-log/log"
 )
 
-//go:generate mockery -name=Logger -inpkg -case=underscore -testonly
+//go:generate mockery --name=Logger --inpackage --case=underscore --testonly
 
 // Logger ...
 //
@@ -16,7 +16,7 @@ type Logger interface {
 	log.Logger
 }
 
-//go:generate mockery -name=Handler -inpkg -case=underscore -testonly
+//go:generate mockery --name=Handler --inpackage --case=underscore --testonly
 
 // Handler ...
 //
@@ -25,7 +25,7 @@ type Handler interface {
 	http.Handler
 }
 
-//go:generate mockery -name=ResponseWriter -inpkg -case=underscore -testonly
+//go:generate mockery --name=ResponseWriter --inpackage --case=underscore --testonly
 
 // ResponseWriter ...
 //
@@ -34,7 +34,7 @@ type ResponseWriter interface {
 	http.ResponseWriter
 }
 
-//go:generate mockery -name=FileInfo -inpkg -case=underscore -testonly
+//go:generate mockery --name=FileInfo --inpackage --case=underscore --testonly
 
 // FileInfo ...
 //
@@ -43,7 +43,7 @@ type FileInfo interface {
 	os.FileInfo
 }
 
-//go:generate mockery -name=File -inpkg -case=underscore -testonly
+//go:generate mockery --name=File --inpackage --case=underscore --testonly
 
 // File ...
 //
@@ -52,7 +52,7 @@ type File interface {
 	http.File
 }
 
-//go:generate mockery -name=FileSystem -inpkg -case=underscore -testonly
+//go:generate mockery --name=FileSystem --inpackage --case=underscore --testonly
 
 // FileSystem ...
 //

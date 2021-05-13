@@ -10,7 +10,7 @@ import (
 	"github.com/go-log/log"
 )
 
-//go:generate mockery -name=Server -inpkg -case=underscore -testonly
+//go:generate mockery --name=Server --inpackage --case=underscore --testonly
 
 // Server ...
 //
